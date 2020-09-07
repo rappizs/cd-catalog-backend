@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('discs', 'DiscController@index');
+Route::get('discs', 'DiscController@search');
 Route::get('discs/{id}', 'DiscController@show');
 Route::post('discs', 'DiscController@store');
 Route::patch('discs/{id}', 'DiscController@update');

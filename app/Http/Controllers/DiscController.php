@@ -8,9 +8,29 @@ use Illuminate\Support\Str;
 
 class DiscController extends Controller
 {
-    public function index(Request $requset)
+    public function search(Request $request)
     {
-        return Disc::all();
+        $searchValue = $request->query('search-value');
+
+        $results = [];
+        $notToSearch = ["id", "created_at", "updated_at"];
+
+        if ($searchValue === null)
+            return Disc::all();
+
+        foreach (Disc::all() as $disc) {
+            foreach ($disc->getAttributes() as $key => $value) {
+                if (
+                    strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
+                    && !in_array($key, $notToSearch)
+                ) {
+                    $results[] = $disc;
+                    break;
+                }
+            }
+        }
+
+        return $results;
     }
 
     public function store(Request $request)
