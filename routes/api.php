@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('disks', 'DiskController@index');
-Route::get('disks/{id}', 'DiskController@show');
-Route::post('disks', 'DiskController@store');
+Route::get('discs', 'DiscController@index');
+Route::get('discs/{id}', 'DiscController@show');
+Route::post('discs', 'DiscController@store');
+Route::patch('discs/{id}', 'DiscController@update');
+Route::delete('discs/{id}', 'DiscController@delete');

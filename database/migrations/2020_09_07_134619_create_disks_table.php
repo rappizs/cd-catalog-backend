@@ -13,7 +13,7 @@ class CreateDisksTable extends Migration
      */
     public function up()
     {
-        Schema::create('disks', function (Blueprint $table) {
+        Schema::create('discs', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('artist_id');
             $table->string('album');
