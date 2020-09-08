@@ -8,11 +8,25 @@ use Illuminate\Support\Str;
 
 class StyleController extends Controller
 {
-    public function index(Request $requset){
-        return Style::all();
+    public function search(Request $request)
+    {
+        $searchValue = $request->query('search-value');
+        $results = [];
+
+        if ($searchValue === null)
+            return Style::all();
+
+        foreach (Style::all() as $style) {
+            if (strpos(strtolower(strval($style->name)), strtolower(strval($searchValue))) !== false) {
+                $results[] = $style;
+            }
+        }
+
+        return $results;
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $style = new Style();
         $style->id = Str::uuid();
         $style->name = $request->name;
@@ -24,12 +38,28 @@ class StyleController extends Controller
         }
     }
 
-    public function show(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        return Style::findOrFail($id);
+        $style = Style::findOrFail($id);
+        if (isset($request->name)) {
+            $style->name = $request->name;
+        }
+
+        try {
+            $style->save();
+        } catch (\Throwable $th) {
+            abort(response($th->getMessage(), 500));
+        }
     }
 
-    public function delete(Request $request, $id){
+    public function delete(Request $request, $id)
+    {
+        $style = Style::findOrFail($id);
 
+        try {
+            $style->delete();
+        } catch (\Throwable $th) {
+            abort(response($th->getMessage(), 500));
+        }
     }
 }

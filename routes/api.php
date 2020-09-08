@@ -19,7 +19,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('discs', 'DiscController@search');
-Route::get('discs/{id}', 'DiscController@show');
 Route::post('discs', 'DiscController@store');
 Route::patch('discs/{id}', 'DiscController@update');
 Route::delete('discs/{id}', 'DiscController@delete');
+
+Route::get('artists', 'ArtistController@search');
+Route::post('artists', 'ArtistController@store');
+Route::patch('artists/{id}', 'ArtistController@update');
+Route::delete('artists/{id}', 'ArtistController@delete');
+
+Route::get('styles', 'StyleController@search');
+Route::post('styles', 'StyleController@store');
+Route::patch('styles/{id}', 'StyleController@update');
+Route::delete('styles/{id}', 'StyleController@delete');
