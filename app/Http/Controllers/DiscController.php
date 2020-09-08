@@ -14,28 +14,49 @@ class DiscController extends Controller
         $searchValue = $request->query('search-value');
         $orderBy = $request->query('order-by');
         $type = $request->query('type');
+        $perPage = $request->query('per-page');
+        $page = $request->query('page');
 
         $discs = DB::table('discs')->orderBy($orderBy, $type)->get();
 
-        $results = [];
+        $result = [];
         $notToSearch = ["id", "created_at", "updated_at"];
 
         if ($searchValue === null)
-            return $discs;
-
-        foreach ($discs as $disc) {
-            foreach ($disc->getAttributes() as $key => $value) {
-                if (
-                    strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
-                    && !in_array($key, $notToSearch)
-                ) {
-                    $results[] = $disc;
-                    break;
+            $result = $discs;
+        else
+            foreach ($discs as $disc) {
+                foreach ($disc->getAttributes() as $key => $value) {
+                    if (
+                        strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
+                        && !in_array($key, $notToSearch)
+                    ) {
+                        $result[] = $disc;
+                        break;
+                    }
                 }
+            }
+
+        $i = 1;
+        foreach ($result as $disc) {
+            $disc->new_id = $i . ".";
+            $i++;
+        }
+
+        $data = [];
+        for ($i = $perPage * $page - $perPage; $i < $perPage * $page; $i++) {
+            if ($i < count($result)) {
+                $data[] = $result[$i];
             }
         }
 
-        return $results;
+        $lastPage = ceil(count($result) / $perPage);
+
+        return [
+            "data" => $data,
+            "current_page" => (int)$page,
+            "last_page" => $lastPage
+        ];
     }
 
     public function store(Request $request)
