@@ -15,7 +15,7 @@ class CreateStylesTable extends Migration
     {
         Schema::create('styles', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('name')->unique();
+            $table->string('name', 50)->unique();
             $table->timestamps();
         });
     }

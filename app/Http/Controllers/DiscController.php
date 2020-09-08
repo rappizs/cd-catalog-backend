@@ -17,7 +17,7 @@ class DiscController extends Controller
         $perPage = $request->query('per-page');
         $page = $request->query('page');
 
-        $discs = DB::table('discs')->orderBy($orderBy, $type)->get();
+        $discs = Disc::orderBy($orderBy, $type)->get();
 
         $result = [];
         $notToSearch = ["id", "created_at", "updated_at"];
