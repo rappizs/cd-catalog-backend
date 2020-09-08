@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Artist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ArtistController extends Controller
@@ -12,11 +13,17 @@ class ArtistController extends Controller
     {
         $searchValue = $request->query('search-value');
         $results = [];
+        $type = $request->query('type');
+
+        if ($type)
+            $artists = DB::table('artists')->orderBy('name', $type)->get();
+        else
+            $artists = DB::table('artists')->orderBy('name', 'asc')->get();
 
         if ($searchValue === null)
-            return Artist::all();
+            return $artists;
 
-        foreach (Artist::all() as $artist) {
+        foreach ($artists as $artist) {
             if (strpos(strtolower(strval($artist->name)), strtolower(strval($searchValue))) !== false) {
                 $results[] = $artist;
             }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Disc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DiscController extends Controller
@@ -11,14 +12,18 @@ class DiscController extends Controller
     public function search(Request $request)
     {
         $searchValue = $request->query('search-value');
+        $orderBy = $request->query('order-by');
+        $type = $request->query('type');
+
+        $discs = DB::table('discs')->orderBy($orderBy, $type)->get();
 
         $results = [];
         $notToSearch = ["id", "created_at", "updated_at"];
 
         if ($searchValue === null)
-            return Disc::all();
+            return $discs;
 
-        foreach (Disc::all() as $disc) {
+        foreach ($discs as $disc) {
             foreach ($disc->getAttributes() as $key => $value) {
                 if (
                     strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
@@ -37,11 +42,11 @@ class DiscController extends Controller
     {
         $disc = new Disc();
         $disc->id = Str::uuid();
-        $disc->artist_id = $request->artist_id;
+        $disc->artist = $request->artist;
         $disc->album = $request->album;
         $disc->year = $request->year;
         $disc->title = $request->title;
-        $disc->style_id = $request->style_id;
+        $disc->style = $request->style;
         $disc->song_count = $request->song_count;
 
         try {

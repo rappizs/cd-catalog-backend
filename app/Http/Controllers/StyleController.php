@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Style;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class StyleController extends Controller
@@ -12,11 +13,17 @@ class StyleController extends Controller
     {
         $searchValue = $request->query('search-value');
         $results = [];
+        $type = $request->query('type');
+
+        if ($type)
+            $styles = DB::table('styles')->orderBy('name', $type)->get();
+        else
+            $styles = DB::table('styles')->orderBy('name', 'asc')->get();
 
         if ($searchValue === null)
-            return Style::all();
+            return $styles;
 
-        foreach (Style::all() as $style) {
+        foreach ($styles as $style) {
             if (strpos(strtolower(strval($style->name)), strtolower(strval($searchValue))) !== false) {
                 $results[] = $style;
             }

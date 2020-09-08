@@ -15,11 +15,11 @@ class CreateDisksTable extends Migration
     {
         Schema::create('discs', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('artist_id');
+            $table->string('artist');
             $table->string('album');
             $table->string('year');
             $table->string('title');
-            $table->string('style_id');
+            $table->string('style');
             $table->integer('song_count');
             $table->string('user_id')->nullable();
             $table->timestamps();
