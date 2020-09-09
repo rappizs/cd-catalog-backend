@@ -27,12 +27,22 @@ class DiscController extends Controller
         else
             foreach ($discs as $disc) {
                 foreach ($disc->getAttributes() as $key => $value) {
-                    if (
-                        strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
-                        && !in_array($key, $notToSearch)
-                    ) {
-                        $result[] = $disc;
-                        break;
+                    if (is_numeric($searchValue)) {
+                        if (
+                            $disc->$key == $searchValue
+                            && !in_array($key, $notToSearch)
+                        ) {
+                            $result[] = $disc;
+                            break;
+                        }
+                    } else {
+                        if (
+                            strpos(strtolower(strval($disc->$key)), strtolower(strval($searchValue))) !== false
+                            && !in_array($key, $notToSearch)
+                        ) {
+                            $result[] = $disc;
+                            break;
+                        }
                     }
                 }
             }
